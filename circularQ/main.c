@@ -21,7 +21,7 @@ int freeQueue(QueueType *cQ);
 int isEmpty(QueueType *cQ);
 int isFull(QueueType *cQ);
 void enQueue(QueueType *cQ, element item);
-void deQueue(QueueType *cQ, element* item);
+void deQueue(QueueType *cQ);
 void printQ(QueueType *cQ);
 void debugQ(QueueType *cQ);
 element getElement();
@@ -39,7 +39,7 @@ int main(void)
 		printf(" Insert=i,  Delete=d,   PrintQ=p,   Debug=b,   Quit=q \n");
 		printf("------------------------------------------------------\n");
 
-		printf("Command = ");
+		printf("Command = "); 
 		scanf(" %c", &command);
 
 		switch(command) {
@@ -50,7 +50,7 @@ int main(void)
 			break;
 		case 'd': 
         case 'D':
-			deQueue(cQ, &data);
+			deQueue(cQ);
 			break;
 		case 'p': 
         case 'P':
@@ -155,15 +155,15 @@ void enQueue(QueueType *cQ, element item) {
  * 
  * 큐가 비어있을 경우에는 빼줄 값이 없으니까 빼지말라고 리턴해준다.
  * 큐는 앞에서부터 값을 빼주지만 현재의 알고리즘으로 보아 fron는 언제나 비워주게 설정되어 있기 때문에 front에 1을 더한 위치의 값을 옮겨준다. 
+ * 추가적으로 위치를 옮겨주지만 말고 ' '로 바꿔준다.
  * 
- * @param cQ 
- * @param item 
+ * @param cQ 아이템을 뺴줄 큐
  */
-void deQueue(QueueType *cQ, element *item) {
+void deQueue(QueueType *cQ) {
     if(isEmpty(cQ)) return;
 
     cQ->front = (cQ->front + 1)%MAX_QUEUE_SIZE;
-    *item = cQ->queue[cQ->front];	
+    cQ->queue[cQ->front] = ' ';	
 }
 
 
