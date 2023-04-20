@@ -160,10 +160,29 @@ void toPostfix() {
     char x; /* 문자하나를 임시로 저장하기 위한 변수 */
     /* exp를 증가시켜가면서, 문자를 읽고 postfix로 변경 */
     while(*exp != '\0') {
-        /* 필요한 로직 완성 */
+        if(getPriority(*exp) == operand) {
+            x = *exp;
+            charCat(&x);
+        } else if(getPriority(*exp) == lparen) {
+            postfixPush(*exp);
+        } else if(getPriority(*exp) == rparen) {
+            while ((x == postfixPop()) != '(') {
+                charCat(&x);
+            }
+        } else {
+            while(getPriority(postfixStack[postfixStackTop]) >= getPriority(*exp)) {
+                x = postfixPop();
+                charCat(&x);
+            }
+            postfixPush(*exp);
+        }
+        exp++;
     }
-    /* 필요한 로직 완성 */
+    while(postfixStackTop != -1) {
+        x = postfixPop();
+        charCat(&x);
     }
+}
     
 void debug() {
     printf("\n---DEBUG\n");
@@ -188,5 +207,25 @@ void reset() {
 }
 
 void evaluation() {
-    /* postfixExp, evalStack을 이용한 계산 */
+    int opr1, opr2, i;
+    int length = strlen(postfixExp);
+    char symbol;
+    evalStackTop = -1;
+    for(i = 0; i < length; i++) {
+        symbol = postfixExp[i];
+        if(getToken(symbol) == operand) {
+            evalPush(symbol - '0');
+        } else {
+            opr2 = evalPop();
+            opr1 = evalPop();
+            switch(getToken(symbol)) {
+                case plus: evalPush(opr1 + opr2); break;
+                case minus: evalPush(opr1 - opr2); break;
+                case times: evalPush(opr1 * opr2); break;
+                case divide: evalPush(opr1 / opr2); break;
+                default: break;
+            }
+        }
+    }
+    evalResult = evalPop();
 }
