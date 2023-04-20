@@ -28,6 +28,9 @@ element getElement();
 
 int main(void)
 {
+
+    printf("[----- [김상수] [2018038078] -----]\n");
+    
 	QueueType *cQ = createQueue();
 	element data;
 	char command;

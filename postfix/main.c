@@ -43,6 +43,7 @@ void reset();
 void evaluation();
 
 int main() {
+    printf("[----- [김상수] [2018038078] -----]\n");
 
     char command;
 
@@ -151,6 +152,7 @@ void charCat(char* c){
 }
 
 /**
+ * @brief 
  * infixExp의 문자를 하나씩 읽어가면서 stack을 이용하여 postfix로 변경한다.
  * 변경된 postfix는 postFixExp에 저장된다.
  */
@@ -160,17 +162,17 @@ void toPostfix() {
     char x; /* 문자하나를 임시로 저장하기 위한 변수 */
     /* exp를 증가시켜가면서, 문자를 읽고 postfix로 변경 */
     while(*exp != '\0') {
-        if(getPriority(*exp) == operand) {
+        if(getPriority(*exp) == operand) { // 피연산자일 경우 
             x = *exp;
-            charCat(&x);
-        } else if(getPriority(*exp) == lparen) {
-            postfixPush(*exp);
-        } else if(getPriority(*exp) == rparen) {
-            while ((x == postfixPop()) != '(') {
+            charCat(&x); // 피연산자를 문자열에 추가
+        } else if(getPriority(*exp) == lparen) { // 왼쪽 괄호일 경우
+            postfixPush(*exp); // 스택에 추가
+        } else if(getPriority(*exp) == rparen) { // 오른쪽 괄호의 경우
+            while ((x == postfixPop()) != '(') { // 왼쪽 괄호를 만날 때까지 스택에서 pop 하면서 문자열에 추가
                 charCat(&x);
             }
-        } else {
-            while(getPriority(postfixStack[postfixStackTop]) >= getPriority(*exp)) {
+        } else { // 연산자일 경우
+            while(getPriority(postfixStack[postfixStackTop]) >= getPriority(*exp)) { // 스택의 탑의 우선순위가 현재 연산자보다 크거나 같을 동안 반복
                 x = postfixPop();
                 charCat(&x);
             }
@@ -178,7 +180,7 @@ void toPostfix() {
         }
         exp++;
     }
-    while(postfixStackTop != -1) {
+    while(postfixStackTop != -1) { // 스택에 남아있는 연산자를 pop
         x = postfixPop();
         charCat(&x);
     }
@@ -210,15 +212,15 @@ void evaluation() {
     int opr1, opr2, i;
     int length = strlen(postfixExp);
     char symbol;
-    evalStackTop = -1;
+    evalStackTop = -1; // 스택 초기화
     for(i = 0; i < length; i++) {
         symbol = postfixExp[i];
-        if(getToken(symbol) == operand) {
+        if(getToken(symbol) == operand) { // 피연산자의 경우
             evalPush(symbol - '0');
         } else {
             opr2 = evalPop();
             opr1 = evalPop();
-            switch(getToken(symbol)) {
+            switch(getToken(symbol)) { // 연산자에 따라 계산하여 결과를 스택에 넣기
                 case plus: evalPush(opr1 + opr2); break;
                 case minus: evalPush(opr1 - opr2); break;
                 case times: evalPush(opr1 * opr2); break;
